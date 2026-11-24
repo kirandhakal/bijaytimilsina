@@ -18,9 +18,13 @@ bijaytimilsina/
 │   │   ├── robots.ts
 │   │   └── sitemap.ts
 │   ├── components/
+│   │   ├── HeroPortrait.tsx    # Pointer-responsive hero photo
+│   │   ├── SpiderIntro.tsx     # Skippable session intro
+│   │   ├── SpiderMark.tsx      # Reusable vector emblem
 │   │   ├── Header.tsx          # Responsive keyboard-accessible navigation
 │   │   ├── Footer.tsx
 │   │   ├── PageShell.tsx       # Shared standalone page introduction
+│   │   ├── ScrollMotion.tsx    # Scroll progress and hero parallax
 │   │   ├── Reveal.tsx          # Progressive enhancement for scroll reveals
 │   │   ├── three/OrbitalScene.tsx
 │   │   └── sections/          # Home, About, Services, Skills, Projects, Contact

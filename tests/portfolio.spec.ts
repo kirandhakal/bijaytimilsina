@@ -7,9 +7,10 @@ test("home, route navigation, filters, and live Three.js canvas", async ({
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "creative orbit",
+    "TIMILSINA.",
   );
   await expect(page.locator(".orbital-canvas canvas")).toBeVisible();
+  await expect(page.locator(".spider-intro")).toHaveCount(0);
   await page.screenshot({ path: "/tmp/bijay-desktop.png" });
   await page.getByRole("button", { name: "Pause 3D animation" }).click();
   await expect(
@@ -40,6 +41,7 @@ test("mobile navigation and layout stay within the viewport", async ({
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/");
   await expect(page.getByRole("navigation")).toBeHidden();
+  await expect(page.locator(".spider-intro")).toHaveCount(0);
   await page.screenshot({ path: "/tmp/bijay-mobile.png" });
   await page.getByRole("button", { name: "Open navigation" }).click();
   await expect(page.getByRole("navigation")).toBeVisible();
@@ -140,4 +142,101 @@ test("reduced motion and WebGL failure keep the portfolio usable", async ({
   await expect(
     page.getByRole("link", { name: "Explore my world" }),
   ).toBeVisible();
+});
+
+test("scroll reveals content once and updates the hero and reading progress", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const card = page.locator(".service-card").first();
+  await expect(card).toHaveCSS("opacity", "0");
+  await page.evaluate(() => window.scrollTo({ top: 420, behavior: "instant" }));
+  await expect
+    .poll(() =>
+      page
+        .locator(".hero")
+        .evaluate((el) =>
+          parseFloat(
+            (el as HTMLElement).style.getPropertyValue("--hero-drift"),
+          ),
+        ),
+    )
+    .toBeGreaterThan(0);
+  await card.scrollIntoViewIfNeeded();
+  await expect(card).toHaveCSS("opacity", "1");
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await expect(card).toHaveCSS("opacity", "1");
+  await page.evaluate(() =>
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }),
+  );
+  await expect
+    .poll(() =>
+      page
+        .locator(".scroll-progress")
+        .evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a),
+    )
+    .toBeGreaterThan(0.99);
+  await expect(page.locator(".contact-form")).toHaveCSS("opacity", "1");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator(".hero-art")).toHaveCSS("translate", "none");
+  await expect(page.locator(".skill-row").first()).toHaveCSS("opacity", "1");
+});
+
+test("keyboard focus reveals offscreen controls and no-JS content stays readable", async ({
+  page,
+  browser,
+}) => {
+  await page.goto("/");
+  await page.getByLabel("Your name").focus();
+  await expect(page.locator(".contact-form")).toHaveCSS("opacity", "1");
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const staticPage = await context.newPage();
+  await staticPage.goto("/");
+  await expect(staticPage.locator(".service-card").first()).toHaveCSS(
+    "opacity",
+    "1",
+  );
+  await expect(
+    staticPage.getByRole("heading", {
+      name: "Many interests. One curious mind.",
+    }),
+  ).toBeVisible();
+  await context.close();
+});
+
+test("spider intro dismisses, stays dismissed, and portrait responds to the pointer", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".spider-intro")).toBeVisible();
+  await page.screenshot({ path: "/tmp/bijay-spider-intro.png" });
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.locator(".spider-intro")).toHaveCount(0);
+  const portrait = page.locator(".hero-portrait-stage");
+  await portrait.hover({ position: { x: 20, y: 50 } });
+  await expect
+    .poll(() =>
+      page
+        .locator(".hero-portrait")
+        .evaluate((el) =>
+          (el as HTMLElement).style.getPropertyValue("--portrait-x"),
+        ),
+    )
+    .not.toBe("");
+  await page.mouse.move(0, 0);
+  await expect
+    .poll(() =>
+      page
+        .locator(".hero-portrait")
+        .evaluate((el) =>
+          (el as HTMLElement).style.getPropertyValue("--portrait-x"),
+        ),
+    )
+    .toBe("0deg");
+  await page.reload();
+  await expect(page.locator(".hero-portrait img")).toBeVisible();
+  await expect(page.locator(".spider-intro")).toHaveCount(0);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await portrait.hover({ position: { x: 20, y: 50 } });
+  await expect(page.locator(".hero-portrait")).toHaveCSS("transform", "none");
 });

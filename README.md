@@ -34,3 +34,11 @@ Publish the **contents of `out/`**, not the repository root. This preserves dire
 - The original Bootstrap site and its license notices are retained in `legacy/` for reference and rollback. They are not included in the static export.
 
 See [FOLDER_STRUCTURE.md](FOLDER_STRUCTURE.md) for the route and component map.
+
+## Scroll animation
+
+`ScrollMotion` adds a reading-progress line and gently moves the hero artwork as the page scrolls. `useReveal` observes individual `data-reveal` blocks for staggered, one-time entrances; new cards inserted by filters are observed too. Add `data-reveal` inside a `Reveal` wrapper to animate another block. Content stays visible without JavaScript, focused controls reveal immediately, and reduced-motion preferences disable entrances and hero movement, including when changed while browsing.
+
+## Spider-inspired hero
+
+The crimson theme uses Bijay's existing portrait in the hero, with pointer tilt and scroll parallax. `HeroPortrait` owns the pointer interaction; `SpiderMark` is the reusable vector emblem. `SpiderIntro` shows a short, skippable loading-style introduction once per browser session. It is decorative, does not wait for network assets, and automatically clears after 1.8 seconds. Escape or Tab dismisses it, and reduced-motion visitors skip it. The existing Three.js scene remains as a subtle red backdrop.

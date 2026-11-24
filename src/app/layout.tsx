@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ScrollMotion from "@/components/ScrollMotion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { profile } from "@/data/portfolio";
@@ -21,6 +22,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <ScrollMotion />
         <Header />
         <main id="main">{children}</main>
         <Footer />

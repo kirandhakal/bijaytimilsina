@@ -4,7 +4,7 @@ export default function SkillsSection() {
   return (
     <section className="section skills-section" id="skills">
       <Reveal>
-        <div className="section-heading">
+        <div data-reveal className="section-heading">
           <div>
             <p className="eyebrow">MY TOOLKIT</p>
             <h2>
@@ -18,7 +18,7 @@ export default function SkillsSection() {
         </div>
         <div className="skill-rows">
           {skills.map((group) => (
-            <div className="skill-row" key={group.name}>
+            <div data-reveal className="skill-row" key={group.name}>
               <h3>{group.name}</h3>
               <div>
                 {group.items.map((item) => (

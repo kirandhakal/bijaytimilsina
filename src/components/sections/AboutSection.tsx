@@ -3,7 +3,7 @@ export default function AboutSection() {
   return (
     <section className="section about-section" id="about">
       <Reveal className="about-grid">
-        <div className="portrait-wrap">
+        <div data-reveal className="portrait-wrap">
           <img
             src="/images/portrait.jpg"
             alt="Bijay Timilsina"
@@ -13,7 +13,7 @@ export default function AboutSection() {
           />
           <div className="portrait-label">A person behind the pixels.</div>
         </div>
-        <div className="about-copy">
+        <div data-reveal className="about-copy">
           <p className="eyebrow">A LITTLE ABOUT ME</p>
           <h2>
             Many interests.

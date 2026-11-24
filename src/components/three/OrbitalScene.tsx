@@ -47,7 +47,7 @@ export default function OrbitalScene() {
         const core = mesh(
           new THREE.IcosahedronGeometry(1.2, 1),
           new THREE.MeshStandardMaterial({
-            color: 0x7779ff,
+            color: 0xb3182d,
             metalness: 0.65,
             roughness: 0.22,
             flatShading: true,
@@ -56,7 +56,7 @@ export default function OrbitalScene() {
         const wire = mesh(
           new THREE.IcosahedronGeometry(1.205, 1),
           new THREE.MeshBasicMaterial({
-            color: 0xc6bdff,
+            color: 0xff9ba3,
             wireframe: true,
             transparent: true,
             opacity: 0.22,
@@ -64,36 +64,36 @@ export default function OrbitalScene() {
         );
         const ringA = mesh(
           new THREE.TorusGeometry(1.9, 0.013, 8, 160),
-          new THREE.MeshBasicMaterial({ color: 0xb6a2ff }),
+          new THREE.MeshBasicMaterial({ color: 0xff4757 }),
         );
         ringA.rotation.set(1.05, 0.35, -0.4);
         const ringB = mesh(
           new THREE.TorusGeometry(2.2, 0.007, 8, 160),
-          new THREE.MeshBasicMaterial({ color: 0x666078 }),
+          new THREE.MeshBasicMaterial({ color: 0x72313a }),
         );
         ringB.rotation.set(-0.5, 1.05, 0.3);
         const ringC = mesh(
           new THREE.TorusGeometry(1.65, 0.008, 8, 160),
-          new THREE.MeshBasicMaterial({ color: 0xc9f27d }),
+          new THREE.MeshBasicMaterial({ color: 0xffb3ac }),
         );
         ringC.rotation.set(0.25, -0.9, -0.2);
         const satellite = mesh(
           new THREE.SphereGeometry(0.12, 20, 20),
           new THREE.MeshStandardMaterial({
-            color: 0xd6ff8c,
-            emissive: 0x3b571a,
+            color: 0xff6c78,
+            emissive: 0x68101c,
             roughness: 0.2,
           }),
         );
         const moon = mesh(
           new THREE.SphereGeometry(0.07, 16, 16),
-          new THREE.MeshBasicMaterial({ color: 0xe8d6ff }),
+          new THREE.MeshBasicMaterial({ color: 0xffd4d0 }),
         );
-        scene.add(new THREE.AmbientLight(0xddd5ff, 1.4));
-        const light = new THREE.DirectionalLight(0xe6d7ff, 5);
+        scene.add(new THREE.AmbientLight(0xffaab1, 1.4));
+        const light = new THREE.DirectionalLight(0xffd3ce, 5);
         light.position.set(-3, 4, 4);
         scene.add(light);
-        const fill = new THREE.PointLight(0x7970ff, 40);
+        const fill = new THREE.PointLight(0xff243f, 40);
         fill.position.set(3, -2, 2);
         scene.add(fill);
         const pointer = { x: 0, y: 0 };

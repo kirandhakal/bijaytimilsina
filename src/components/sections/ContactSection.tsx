@@ -67,7 +67,7 @@ export default function ContactSection() {
   return (
     <section className="section contact-section" id="contact">
       <Reveal className="contact-grid">
-        <div className="contact-copy">
+        <div data-reveal className="contact-copy">
           <p className="eyebrow">GOOD THINGS START WITH A HELLO</p>
           <h2>
             Let’s make
@@ -110,6 +110,7 @@ export default function ContactSection() {
           action={profile.contactEndpoint}
           method="post"
           aria-busy={status === "sending"}
+          data-reveal
           className="contact-form"
         >
           <label htmlFor="contact-name">Your name</label>

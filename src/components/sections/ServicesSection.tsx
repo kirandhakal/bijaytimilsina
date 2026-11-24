@@ -11,7 +11,7 @@ export default function ServicesSection() {
   return (
     <section className="section services-section" id="services">
       <Reveal>
-        <div className="section-heading">
+        <div data-reveal className="section-heading">
           <div>
             <p className="eyebrow">WHAT I BRING TO THE TABLE</p>
             <h2>
@@ -29,7 +29,7 @@ export default function ServicesSection() {
           {services.map((service) => {
             const Icon = icons[service.icon as keyof typeof icons];
             return (
-              <article className="service-card" key={service.title}>
+              <article data-reveal className="service-card" key={service.title}>
                 <Icon size={30} strokeWidth={1.3} />
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>

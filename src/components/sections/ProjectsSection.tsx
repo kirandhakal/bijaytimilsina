@@ -8,7 +8,7 @@ export default function ProjectsSection() {
   return (
     <section className="section projects-section" id="projects">
       <Reveal>
-        <div className="section-heading">
+        <div data-reveal className="section-heading">
           <div>
             <p className="eyebrow">AN OPEN EXPLORATION</p>
             <h2>
@@ -22,7 +22,11 @@ export default function ProjectsSection() {
             products to creating gaming content.
           </p>
         </div>
-        <div className="filter-bar" aria-label="Filter explorations">
+        <div
+          data-reveal
+          className="filter-bar"
+          aria-label="Filter explorations"
+        >
           {["All", "Development", "Creative"].map((item) => (
             <button
               key={item}
@@ -39,6 +43,7 @@ export default function ProjectsSection() {
             .filter((p) => filter === "All" || p.category === filter)
             .map((project) => (
               <article
+                data-reveal
                 className={`project-card ${project.visual}`}
                 key={project.title}
               >
