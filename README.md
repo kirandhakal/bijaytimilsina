@@ -1,3 +1,20 @@
+# Cinematic Spider-Man concept
+
+The home route is a responsive Bahlil Morales promotional experience built with Next.js, Tailwind CSS, Framer Motion and Lucide React.
+
+- 3.5-second skippable intro with reduced-motion support.
+- Three-stage transparent character artwork with reversible radial reveal and manual slider.
+- Responsive dropdown navigation, game reviews, trailer dialog and official-game store link.
+- Accessible dialogs with keyboard dismissal and focus restoration.
+
+Run `npm install` and `npm run dev`. Build the static site with `npm run build` (output: `out/`). Run the focused browser checks with `npx playwright test tests/spiderman.spec.ts` and TypeScript validation with `npm run typecheck`.
+
+The reference video was not attached; the design follows the written brief. This is an independent fictional fan concept. Review scores are illustrative, and the pre-order action explains the concept and links to the real game rather than collecting payments. Trailer playback is embedded from YouTube and needs network access. Character artwork and its generation prompt are documented in `public/images/spiderman/README.md`.
+
+The older portfolio routes and components remain in the repository; their original tests describe the previous home page.
+
+---
+
 # Bijay Timilsina — portfolio
 
 An original Next.js App Router portfolio with TypeScript, Three.js, and responsive CSS. The existing biographical details, social links, and contact API are retained. The parent project's folder guide and redesign branches informed the component boundaries; the design and implementation are new.
