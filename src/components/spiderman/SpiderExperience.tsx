@@ -19,7 +19,6 @@ import {
   Volume2,
   Youtube,
 } from "lucide-react";
-import SpiderMark from "../SpiderMark";
 import {
   profile,
   socials,
@@ -459,7 +458,12 @@ export function ActionModal({ onClose }: { onClose: () => void }) {
         >
           <X />
         </button>
-        <SpiderMark />
+        <img
+          className="hire-logo"
+          src="/images/spiderman/spider-logo.png"
+          alt=""
+          aria-hidden="true"
+        />
         <span className="eyebrow">LET&apos;S BUILD THE NEXT ONE</span>
         <h2>Hire Bijay Timilsina.</h2>
         <p>
@@ -467,6 +471,9 @@ export function ActionModal({ onClose }: { onClose: () => void }) {
           websites, Android apps, and digital content.
         </p>
         <ContactForm idPrefix="hire" />
+        <button className="cancel-button" type="button" onClick={onClose}>
+          Cancel
+        </button>
       </motion.div>
     </motion.div>
   );
@@ -714,7 +721,6 @@ export default function SpiderExperience() {
                 </button>
               </div>
             </motion.div>
-            <SpiderMark />
           </section>
           <section className="story-section" id="skills">
             <motion.div
@@ -739,7 +745,6 @@ export default function SpiderExperience() {
                 </a>
               </div>
             </motion.div>
-            <SpiderMark />
           </section>
           <section className="story-section" id="services">
             <motion.div
@@ -764,7 +769,6 @@ export default function SpiderExperience() {
                 </button>
               </div>
             </motion.div>
-            <SpiderMark />
           </section>
           <section className="story-section" id="contact">
             <motion.div
@@ -804,7 +808,7 @@ export default function SpiderExperience() {
                     </a>
                   </div>
                   <div className="social-list">
-                    {socials.slice(0, 3).map((s) => (
+                    {socials.slice(0, 4).map((s) => (
                       <a
                         key={s.label}
                         href={s.url}
