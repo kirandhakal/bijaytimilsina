@@ -55,8 +55,8 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
           />
           <span className="logo-fill" />
         </div>
-        <p>BIJAY TIMILSINA</p>
-        <span className="intro-caption">A NEW WORLD OF POSSIBILITIES</span>
+        <p>Er.BIJAY TIMILSINA</p>
+        <span className="intro-caption">REGISTERED COMPUTER ENGINNEER</span>
         <div className="intro-track" aria-hidden="true">
           <span />
         </div>
@@ -601,12 +601,12 @@ export function HeroSection({
         <button className="primary-button" onClick={onHire}>
           LET&apos;S BUILD <ArrowRight size={19} />
         </button>
-        <div className="platforms">
+        {/* <div className="platforms">
           <span className="ps-mark">BT</span>
           <span className="platform-divider" />
           <span>UI / UX</span>
           <span className="platform-note">PRESS POWER TO BOOT</span>
-        </div>
+        </div> */}
       </motion.div>
       <motion.aside
         className="hero-aside"
