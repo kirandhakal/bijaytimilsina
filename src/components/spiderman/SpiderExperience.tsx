@@ -31,6 +31,13 @@ import {
 export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   const reduced = useReducedMotion();
   useEffect(() => {
+    const audio = new Audio("/spiderman_web_swing_loading_loud.wav");
+    audio.volume = 0.72;
+    void audio.play().catch(() => {
+      // Browsers may block autoplay until the visitor interacts with the page.
+    });
+  }, []);
+  useEffect(() => {
     const timer = setTimeout(onComplete, reduced ? 100 : 3200);
     return () => clearTimeout(timer);
   }, [onComplete, reduced]);
@@ -98,7 +105,7 @@ export function NavigationBar({ onHire }: { onHire: () => void }) {
   return (
     <header className="sp-nav">
       <a href="#main" className="sp-logo" aria-label="Bijay Timilsina home">
-        <SpiderMark />
+        <img src="/images/spiderman/spider-logo.png" alt="" />
       </a>
       <nav
         aria-label="Main navigation"
@@ -197,8 +204,8 @@ export function PortfolioStats() {
     <section className="reviews" aria-label="Portfolio highlights">
       <h2>SPEC SHEET</h2>
       {[
-        { name: "Projects", rating: "12+", quote: "Shipped & in progress" },
-        { name: "Clients", rating: "5+", quote: "Happy collaborations" },
+        { name: "Projects", rating: "99+", quote: "Shipped & in progress" },
+        { name: "Clients", rating: "999+", quote: "Happy collaborations" },
         { name: "Support", rating: "24", quote: "Hours when it counts" },
       ].map((r) => (
         <div className="review" key={r.name}>
