@@ -8,11 +8,16 @@ export const profile = {
     "https://contact.kirandhakal.me/v1/forms/frm_7a-fq9T7yfRIshKDSQytMcnK/submissions",
 };
 export const socials = [
-  { label: "YouTube", url: "https://www.youtube.com/@BIZAY_TERMINATOR" },
-  { label: "Instagram", url: "https://www.instagram.com/ig_bi_jay_z/" },
+  { label: "YouTube", url: "https://www.youtube.com/@BIZAY0P_HONI" },
+  { label: "Instagram", url: "https://www.instagram.com/ig_bijay69xzz/" },
   { label: "X / Twitter", url: "https://x.com/Terminator_0P/" },
   { label: "Facebook", url: "https://www.facebook.com/btml2358" },
 ];
+
+export const designer = {
+  name: "Kiran Dhakal",
+  url: "https://dhakalkiran.com.np",
+};
 export const services = [
   {
     title: "Web experiences",
@@ -72,7 +77,7 @@ export const explorations = [
     title: "Beyond the screen",
     category: "Creative",
     description:
-      "Gaming and digital storytelling on my BIZAY TERMINATOR channel.",
+      "Gaming and digital storytelling on my BIZAY0P_HONI channel.",
     visual: "gaming",
     tags: ["YouTube", "Gaming"],
     href: socials[0].url,

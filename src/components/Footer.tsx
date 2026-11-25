@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { socials } from "@/data/portfolio";
+import { designer, socials } from "@/data/portfolio";
 export default function Footer() {
   return (
     <footer className="site-footer">
@@ -8,7 +8,9 @@ export default function Footer() {
           Bijay<span>.</span>
         </Link>
         <p>
-          Built with curiosity.
+          <a href={designer.url} target="_blank" rel="noreferrer">
+            Developer, designer &amp; digital creator
+          </a>
           <br />
           From Pokhara, Nepal.
         </p>
@@ -22,7 +24,9 @@ export default function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Bijay Timilsina</span>
-        <span>Code. Create. Play. Repeat.</span>
+        <a href={designer.url} target="_blank" rel="noreferrer">
+          Designed
+        </a>
         <a href="#main">Back to top</a>
       </div>
     </footer>

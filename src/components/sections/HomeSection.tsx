@@ -64,7 +64,7 @@ export default function HomeSection() {
             <br />A creator’s instinct.
           </p>
           <a
-            href="https://www.youtube.com/@BIZAY_TERMINATOR"
+            href="https://www.youtube.com/@BIZAY0P_HONI"
             target="_blank"
             rel="noreferrer"
             className="hero-channel"

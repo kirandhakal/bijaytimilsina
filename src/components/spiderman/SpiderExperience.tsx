@@ -1,11 +1,13 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight,
   ArrowRight,
   ChevronDown,
   Mail,
+  MapPin,
+  Phone,
   Play,
   X,
   Menu,
@@ -18,12 +20,18 @@ import {
   Youtube,
 } from "lucide-react";
 import SpiderMark from "../SpiderMark";
-import { profile, socials, skills, services } from "@/data/portfolio";
+import {
+  profile,
+  socials,
+  skills,
+  services,
+  designer,
+} from "@/data/portfolio";
 
 export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   const reduced = useReducedMotion();
   useEffect(() => {
-    const timer = setTimeout(onComplete, reduced ? 100 : 3500);
+    const timer = setTimeout(onComplete, reduced ? 100 : 3200);
     return () => clearTimeout(timer);
   }, [onComplete, reduced]);
   return (
@@ -31,19 +39,28 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
       className="sp-intro"
       exit={{ opacity: 0, filter: "blur(12px)" }}
       transition={{ duration: 0.7 }}
+      aria-label="Portfolio introduction"
     >
       <div className="web-texture" />
       <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
+        initial={{ opacity: 0, scale: 0.88 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.8 }}
+        transition={{ duration: 1.2 }}
       >
-        <SpiderMark />
+        <div className="intro-logo" aria-hidden="true">
+          <img
+            className="logo-base"
+            src="/images/spiderman/spider-logo.png"
+            alt=""
+          />
+          <span className="logo-fill" />
+        </div>
         <p>BIJAY TIMILSINA</p>
+        <span className="intro-caption">A NEW WORLD OF POSSIBILITIES</span>
+        <div className="intro-track" aria-hidden="true">
+          <span />
+        </div>
       </motion.div>
-      <button onClick={onComplete}>
-        SKIP INTRO <ArrowRight size={14} />
-      </button>
     </motion.div>
   );
 }
@@ -201,23 +218,29 @@ export function PortfolioStats() {
     </section>
   );
 }
-export function ChannelPreview({ onPlay }: { onPlay: () => void }) {
+export function ChannelPreview() {
+  const youtube = socials.find((s) => s.label === "YouTube")?.url ?? socials[0].url;
   return (
     <section className="trailer-preview" id="trailer">
       <h2>WATCH CHANNEL</h2>
-      <button onClick={onPlay} aria-label="Open BIZAY TERMINATOR on YouTube">
+      <a
+        href={youtube}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Open BIZAY0P_HONI on YouTube"
+      >
         <img
           src="/images/portrait.jpg"
-          alt="BIZAY TERMINATOR — gaming and digital content"
+          alt="BIZAY0P_HONI — gaming and digital content"
           loading="lazy"
         />
         <span className="play-circle">
           <Play fill="currentColor" size={19} />
         </span>
         <span className="trailer-caption">
-          BIZAY TERMINATOR <span>LIVE</span>
+          BIZAY0P_HONI <span>LIVE</span>
         </span>
-      </button>
+      </a>
     </section>
   );
 }
@@ -249,13 +272,125 @@ export function SocialLinks() {
     </div>
   );
 }
-export function ActionModal({
-  kind,
-  onClose,
-}: {
-  kind: "trailer" | "store";
-  onClose: () => void;
-}) {
+function ContactForm({ idPrefix = "contact" }: { idPrefix?: string }) {
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
+  const [message, setMessage] = useState("");
+  const submitting = useRef(false);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting.current) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const payload = {
+      name: String(data.get("name")).trim(),
+      email: String(data.get("email")).trim(),
+      message: String(data.get("message")).trim(),
+    };
+    if (Object.values(payload).some((value) => !value)) {
+      setStatus("error");
+      setMessage("Please enter your name, email, and message.");
+      return;
+    }
+    submitting.current = true;
+    setStatus("sending");
+    setMessage("Sending your message…");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(profile.contactEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      if (!response.ok)
+        throw new Error(
+          response.status === 429
+            ? "Too many messages. Please wait a moment and try again."
+            : "Your message could not be sent. Please try again later.",
+        );
+      setStatus("success");
+      setMessage("Thanks for reaching out! Your message has been sent.");
+      form.reset();
+    } catch (error) {
+      setStatus("error");
+      setMessage(
+        error instanceof TypeError
+          ? "Unable to connect. Check your connection or email me directly."
+          : error instanceof Error && error.name === "AbortError"
+            ? "The request timed out. Please try again or email me directly."
+            : error instanceof Error
+              ? error.message
+              : "Something went wrong. Please try again.",
+      );
+    } finally {
+      clearTimeout(timeout);
+      submitting.current = false;
+    }
+  }
+
+  return (
+    <form
+      onSubmit={submit}
+      action={profile.contactEndpoint}
+      method="post"
+      aria-busy={status === "sending"}
+      className="contact-form"
+    >
+      <label htmlFor={`${idPrefix}-name`}>Your name</label>
+      <input
+        id={`${idPrefix}-name`}
+        name="name"
+        autoComplete="name"
+        placeholder="What should I call you?"
+        maxLength={500}
+        required
+        disabled={status === "sending"}
+      />
+      <label htmlFor={`${idPrefix}-email`}>Email address</label>
+      <input
+        id={`${idPrefix}-email`}
+        name="email"
+        type="email"
+        autoComplete="email"
+        placeholder="you@example.com"
+        required
+        disabled={status === "sending"}
+      />
+      <label htmlFor={`${idPrefix}-message`}>What are you thinking?</label>
+      <textarea
+        id={`${idPrefix}-message`}
+        name="message"
+        rows={4}
+        maxLength={5000}
+        placeholder="A little about your idea…"
+        required
+        disabled={status === "sending"}
+      />
+      <button
+        className="button primary"
+        type="submit"
+        disabled={status === "sending"}
+      >
+        {status === "sending" ? "Sending…" : "Send message"}
+      </button>
+      <p
+        className={`form-status ${status}`}
+        role={status === "error" ? "alert" : "status"}
+      >
+        {message}
+      </p>
+    </form>
+  );
+}
+
+export function ActionModal({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement;
@@ -265,8 +400,9 @@ export function ActionModal({
     const key = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "Tab") {
-        const items =
-          ref.current?.querySelectorAll<HTMLElement>("button,a,iframe");
+        const items = ref.current?.querySelectorAll<HTMLElement>(
+          "button,a,input,textarea",
+        );
         if (!items?.length) return;
         const first = items[0],
           last = items[items.length - 1];
@@ -299,12 +435,10 @@ export function ActionModal({
       onClick={onClose}
     >
       <motion.div
-        className={`sp-modal ${kind === "store" ? "store-modal" : ""}`}
+        className="sp-modal store-modal"
         role="dialog"
         aria-modal="true"
-        aria-label={
-          kind === "trailer" ? "YouTube channel" : "Contact Bijay Timilsina"
-        }
+        aria-label="Contact Bijay Timilsina"
         tabIndex={-1}
         ref={ref}
         onClick={(e) => e.stopPropagation()}
@@ -318,41 +452,14 @@ export function ActionModal({
         >
           <X />
         </button>
-        {kind === "trailer" ? (
-          <>
-            <SpiderMark />
-            <span className="eyebrow">BEYOND THE SCREEN</span>
-            <h2>BIZAY TERMINATOR</h2>
-            <p>
-              Gaming, storytelling, and digital media — connect with a global
-              audience through the channel.
-            </p>
-            <a
-              className="primary-button"
-              href={socials[0].url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              OPEN YOUTUBE <ArrowUpRight size={18} />
-            </a>
-          </>
-        ) : (
-          <>
-            <SpiderMark />
-            <span className="eyebrow">LET&apos;S BUILD THE NEXT ONE</span>
-            <h2>Hire Bijay Timilsina.</h2>
-            <p>
-              UI/UX designer & web developer from Pokhara. Available for
-              freelance — websites, Android apps, and digital content.
-            </p>
-            <a className="primary-button" href={`mailto:${profile.email}`}>
-              EMAIL ME <ArrowUpRight size={18} />
-            </a>
-            <p>
-              {profile.phone} · {profile.location}
-            </p>
-          </>
-        )}
+        <SpiderMark />
+        <span className="eyebrow">LET&apos;S BUILD THE NEXT ONE</span>
+        <h2>Hire Bijay Timilsina.</h2>
+        <p>
+          UI/UX designer & web developer from Pokhara. Available for freelance —
+          websites, Android apps, and digital content.
+        </p>
+        <ContactForm idPrefix="hire" />
       </motion.div>
     </motion.div>
   );
@@ -361,12 +468,10 @@ export function HeroSection({
   power,
   setPower,
   onHire,
-  onPlay,
 }: {
   power: number;
   setPower: React.Dispatch<React.SetStateAction<number>>;
   onHire: () => void;
-  onPlay: () => void;
 }) {
   const [muted, setMuted] = useState(true);
   const isAutoRef = useRef(true);
@@ -485,7 +590,7 @@ export function HeroSection({
         <div className="hero-kicker">
           <span /> DESIGNER · DEVELOPER · CREATOR
         </div>
-        <div className="marvel-mark">POKHARA</div>
+        <div className="marvel-mark">Computer Engineer</div>
         <h1>BIJAY</h1>
         <p className="hero-subtitle">TIMILSINA</p>
         <p className="hero-description">
@@ -510,7 +615,7 @@ export function HeroSection({
         transition={{ duration: 1, delay: 0.6 }}
       >
         <PortfolioStats />
-        <ChannelPreview onPlay={onPlay} />
+        <ChannelPreview />
       </motion.aside>
       <div className="transform-controls" id="controls">
         <button onClick={transform} className="transform-button">
@@ -554,22 +659,21 @@ export function HeroSection({
 export default function SpiderExperience() {
   const [intro, setIntro] = useState(true),
     [power, setPower] = useState(0),
-    [modal, setModal] = useState<"trailer" | "store" | null>(null);
+    [modal, setModal] = useState(false);
   const finish = useRef(() => setIntro(false)).current;
-  const close = useRef(() => setModal(null)).current;
+  const close = useRef(() => setModal(false)).current;
   return (
     <div className="sp-experience">
       <AnimatePresence>
         {intro && <IntroAnimation onComplete={finish} />}
       </AnimatePresence>
       <div inert={intro}>
-        <NavigationBar onHire={() => setModal("store")} />
+        <NavigationBar onHire={() => setModal(true)} />
         <main id="main">
           <HeroSection
             power={power}
             setPower={setPower}
-            onHire={() => setModal("store")}
-            onPlay={() => setModal("trailer")}
+            onHire={() => setModal(true)}
           />
           <section className="story-section" id="story">
             <motion.div
@@ -648,7 +752,7 @@ export default function SpiderExperience() {
                   websites, Android apps, clear interfaces, and digital content
                   from Pokhara — remote OK.
                 </p>
-                <button onClick={() => setModal("store")}>
+                <button onClick={() => setModal(true)}>
                   HIRE ME <ArrowUpRight size={20} />
                 </button>
               </div>
@@ -659,28 +763,55 @@ export default function SpiderExperience() {
             <motion.div
               initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.2 }}
             >
-              <span className="eyebrow">END OF FILE · J6</span>
-              <h2>
-                Thanks for probing the board.
-                <br />
-                <em>Let&apos;s build the next one together.</em>
-              </h2>
-              <div className="story-bottom">
-                <p>
-                  {profile.location} · {profile.phone}
-                  <br />
-                  <a href={`mailto:${profile.email}`}>{profile.email}</a>
-                  <br />
-                  Birthday 23 Nov · BE in Computer · Freelance available
-                </p>
-                <a href={`mailto:${profile.email}`}>
-                  SEND A MESSAGE <ArrowUpRight size={20} />
-                </a>
+              <span className="eyebrow">GOOD THINGS START WITH A HELLO</span>
+              <div className="contact-panel">
+                <div className="contact-copy">
+                  <h2>
+                    Let&apos;s make
+                    <br />
+                    <em>something matter.</em>
+                  </h2>
+                  <p>
+                    A project, a collaboration, or just a conversation.
+                    <br />
+                    I&apos;d love to hear what you have in mind.
+                  </p>
+                  <div className="contact-links">
+                    <a href={`mailto:${profile.email}`}>
+                      <Mail size={19} />
+                      {profile.email}
+                    </a>
+                    <a href="tel:+9779806591081">
+                      <Phone size={19} />
+                      {profile.phone}
+                    </a>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Lakeside+Pokhara+Nepal"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <MapPin size={19} />
+                      {profile.location}
+                    </a>
+                  </div>
+                  <div className="social-list">
+                    {socials.slice(0, 3).map((s) => (
+                      <a
+                        key={s.label}
+                        href={s.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {s.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+                <ContactForm idPrefix="page-contact" />
               </div>
             </motion.div>
-            <SpiderMark />
           </section>
         </main>
         <footer className="sp-footer" id="credits">
@@ -688,16 +819,32 @@ export default function SpiderExperience() {
             BIJAY <b>TIMILSINA</b>
           </span>
           <p>
-            Developer, designer &amp; digital creator · {profile.location}
+            <a
+              href={designer.url}
+              target="_blank"
+              rel="noreferrer"
+              title="Designed by Kiran Dhakal"
+            >
+              Developer, designer &amp; digital creator
+            </a>{" "}
+            · {profile.location}
             <br />
             © {new Date().getFullYear()} ·{" "}
-            <a href={profile.url}>{profile.url.replace("https://", "")}</a>
+            <a
+              className="designed-credit"
+              href={designer.url}
+              target="_blank"
+              rel="noreferrer"
+              title="Designed by Kiran Dhakal"
+            >
+              Designed
+            </a>
           </p>
           <a href="#main">BACK TO TOP ↑</a>
         </footer>
       </div>
       <AnimatePresence>
-        {modal && <ActionModal kind={modal} onClose={close} />}
+        {modal && <ActionModal onClose={close} />}
       </AnimatePresence>
     </div>
   );
