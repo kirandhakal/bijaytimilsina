@@ -333,7 +333,7 @@ button {
 .character-frame {
   position: absolute;
   inset: 0;
-  background-image: url("/images/spiderman/characters.webp");
+  background-image: url("/images/spiderman/spirdman.png");
   background-repeat: no-repeat;
   background-size: 300% 100%;
   filter: drop-shadow(18px 15px 15px #18060b50);
@@ -520,9 +520,26 @@ button {
 .transform-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 7px;
+  font-size: 8px;
   letter-spacing: 2px;
   color: #bc9299;
+  font-weight: 700;
+}
+.transform-labels span {
+  transition:
+    color 0.3s ease,
+    opacity 0.3s ease,
+    text-shadow 0.3s ease,
+    transform 0.3s ease;
+  opacity: 0.5;
+}
+.transform-labels span.active {
+  opacity: 1;
+  color: #ffffff;
+  text-shadow:
+    0 0 10px #ff3b56,
+    0 0 20px #ff193988;
+  transform: scale(1.08);
 }
 .hero-bottom {
   position: absolute;
@@ -562,9 +579,25 @@ button {
   font-size: 8px;
   letter-spacing: 2px;
   color: #d5b0b8;
+  transition: color 0.2s, opacity 0.2s;
+}
+.scroll-cue:hover {
+  color: #ffffff;
+  opacity: 1;
 }
 .scroll-cue span {
   font-size: 19px;
+  display: inline-block;
+  animation: scroll-cue-bounce 1.9s ease-in-out infinite;
+}
+@keyframes scroll-cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
 }
 .sound-label {
   display: flex;
@@ -573,6 +606,14 @@ button {
   font-size: 8px;
   letter-spacing: 1.5px;
   color: #aa8490;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.sound-label:hover {
+  color: #ffffff;
 }
 .particles {
   position: absolute;

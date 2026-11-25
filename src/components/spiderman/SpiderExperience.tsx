@@ -14,6 +14,7 @@ import {
   Zap,
   RotateCcw,
   VolumeX,
+  Volume2,
 } from "lucide-react";
 import SpiderMark from "../SpiderMark";
 
@@ -372,29 +373,101 @@ export function HeroSection({
   onPlay,
 }: {
   power: number;
-  setPower: (n: number) => void;
+  setPower: React.Dispatch<React.SetStateAction<number>>;
   onStore: () => void;
   onPlay: () => void;
 }) {
+  const [muted, setMuted] = useState(true);
+  const isAutoRef = useRef(true);
+  const idleTimer = useRef<NodeJS.Timeout | null>(null);
   const animation = useRef<number>(0);
+  const powerRef = useRef(power);
+  powerRef.current = power;
   const reduced = useReducedMotion();
-  useEffect(() => () => cancelAnimationFrame(animation.current), []);
+
+  // Auto infinite animation without requiring scroll
+  useEffect(() => {
+    if (reduced) return;
+
+    let lastTime = performance.now();
+    let direction = 1; // 1 = transforming towards hero (100), -1 = towards human (0)
+    let pauseUntil = performance.now() + 1800; // start with dramatic pause at human
+
+    const tick = (now: number) => {
+      const delta = Math.min(0.1, (now - lastTime) / 1000);
+      lastTime = now;
+
+      if (isAutoRef.current) {
+        if (now >= pauseUntil) {
+          // Smooth 3 second morph between human and hero
+          const step = 33.3 * delta * direction;
+          const current = powerRef.current;
+          let next = current + step;
+
+          if (direction === 1 && next >= 100) {
+            next = 100;
+            direction = -1;
+            pauseUntil = now + 2400; // hold at fully transformed hero
+          } else if (direction === -1 && next <= 0) {
+            next = 0;
+            direction = 1;
+            pauseUntil = now + 2400; // hold at human
+          }
+
+          setPower(next);
+        }
+      }
+
+      animation.current = requestAnimationFrame(tick);
+    };
+
+    animation.current = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(animation.current);
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [reduced, setPower]);
+
   const transform = () => {
     cancelAnimationFrame(animation.current);
-    const from = power,
-      to = power > 50 ? 0 : 100,
-      start = performance.now();
+    isAutoRef.current = false;
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+
+    const from = powerRef.current;
+    const to = from > 50 ? 0 : 100;
+    const start = performance.now();
+
     if (reduced) {
       setPower(to);
       return;
     }
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / 3200);
-      setPower(from + (to - from) * (t * t * (3 - 2 * t)));
-      if (t < 1) animation.current = requestAnimationFrame(tick);
+
+    const manualTick = (now: number) => {
+      const t = Math.min(1, (now - start) / 2400);
+      const eased = from + (to - from) * (t * t * (3 - 2 * t));
+      setPower(t >= 1 ? to : eased);
+      if (t < 1) {
+        animation.current = requestAnimationFrame(manualTick);
+      } else {
+        // Resume auto infinite loop after 3.5 seconds
+        idleTimer.current = setTimeout(() => {
+          isAutoRef.current = true;
+        }, 3500);
+      }
     };
-    animation.current = requestAnimationFrame(tick);
+    animation.current = requestAnimationFrame(manualTick);
   };
+
+  const handleSliderChange = (val: number) => {
+    cancelAnimationFrame(animation.current);
+    isAutoRef.current = false;
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    setPower(val);
+    idleTimer.current = setTimeout(() => {
+      isAutoRef.current = true;
+    }, 4000);
+  };
+
   return (
     <section className="sp-hero" id="experience">
       <div className="web-texture" />
@@ -461,15 +534,12 @@ export function HeroSection({
           type="range"
           min="0"
           max="100"
-          value={power}
-          onChange={(e) => {
-            cancelAnimationFrame(animation.current);
-            setPower(Number(e.target.value));
-          }}
+          value={Math.round(power)}
+          onChange={(e) => handleSliderChange(Number(e.target.value))}
         />
         <div className="transform-labels">
-          <span>HUMAN</span>
-          <span>HERO</span>
+          <span className={power <= 35 ? "active" : ""}>HUMAN</span>
+          <span className={power >= 65 ? "active" : ""}>HERO</span>
         </div>
       </div>
       <div className="hero-bottom">
@@ -477,9 +547,17 @@ export function HeroSection({
         <a className="scroll-cue" href="#story">
           SCROLL TO DISCOVER <span>↓</span>
         </a>
-        <span className="sound-label">
-          <VolumeX size={15} /> SOUND OFF
-        </span>
+        <button
+          type="button"
+          className="sound-label"
+          onClick={() => setMuted((m) => !m)}
+          aria-label={
+            muted ? "Sound muted, click to unmute" : "Sound on, click to mute"
+          }
+        >
+          {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}{" "}
+          {muted ? "SOUND OFF" : "SOUND ON"}
+        </button>
       </div>
     </section>
   );
