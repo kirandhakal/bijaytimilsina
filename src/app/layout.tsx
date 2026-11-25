@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "Spider-Man — Bahlil Morales",
-  description: "A cinematic Spider-Man fan concept.",
+  title: "Bijay Timilsina — Developer · Designer · Creator",
+  description:
+    "Crafting exceptional digital experiences from Pokhara, Nepal. UI/UX designer, web developer, freelancer, and digital creator.",
   icons: { icon: "/favicon.png" },
 };
 export default function RootLayout({

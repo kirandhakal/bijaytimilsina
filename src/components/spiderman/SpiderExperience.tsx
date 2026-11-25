@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   ChevronDown,
-  ShoppingBag,
+  Mail,
   Play,
   X,
   Menu,
@@ -15,8 +15,10 @@ import {
   RotateCcw,
   VolumeX,
   Volume2,
+  Youtube,
 } from "lucide-react";
 import SpiderMark from "../SpiderMark";
+import { profile, socials, skills, services } from "@/data/portfolio";
 
 export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   const reduced = useReducedMotion();
@@ -37,7 +39,7 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
         transition={{ duration: 1.8 }}
       >
         <SpiderMark />
-        <p>BAHLIL MORALES</p>
+        <p>BIJAY TIMILSINA</p>
       </motion.div>
       <button onClick={onComplete}>
         SKIP INTRO <ArrowRight size={14} />
@@ -46,24 +48,24 @@ export function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   );
 }
 const menuContent: Record<string, { label: string; href: string }[]> = {
-  GAMES: [
-    { label: "Experience the transformation", href: "#experience" },
-    { label: "Meet your new hero", href: "#story" },
+  ABOUT: [
+    { label: "Meet Bijay", href: "#story" },
+    { label: "Unleash the experience", href: "#experience" },
   ],
-  NEWS: [
-    { label: "Watch the launch trailer", href: "#trailer" },
-    { label: "The city needs a new hero", href: "#story" },
+  SKILLS: [
+    { label: "Frontend & design", href: "#skills" },
+    { label: "Backend & mobile", href: "#skills" },
   ],
-  BLOG: [
-    { label: "Behind the mask", href: "#story" },
-    { label: "Discover your power", href: "#experience" },
-  ],
-  SERVICES: [
-    { label: "Accessibility & controls", href: "#controls" },
-    { label: "About this concept", href: "#credits" },
+  SERVICES: services.map((s) => ({
+    label: s.title,
+    href: "#services",
+  })),
+  CONTACT: [
+    { label: "Get in touch", href: "#contact" },
+    { label: "Open contact card", href: "#hire" },
   ],
 };
-export function NavigationBar({ onStore }: { onStore: () => void }) {
+export function NavigationBar({ onHire }: { onHire: () => void }) {
   const [active, setActive] = useState<string | null>(null),
     [mobile, setMobile] = useState(false);
   useEffect(() => {
@@ -78,7 +80,7 @@ export function NavigationBar({ onStore }: { onStore: () => void }) {
   }, []);
   return (
     <header className="sp-nav">
-      <a href="#main" className="sp-logo" aria-label="Spider-Man home">
+      <a href="#main" className="sp-logo" aria-label="Bijay Timilsina home">
         <SpiderMark />
       </a>
       <nav
@@ -100,9 +102,13 @@ export function NavigationBar({ onStore }: { onStore: () => void }) {
                   <a
                     key={l.label}
                     href={l.href}
-                    onClick={() => {
+                    onClick={(e) => {
                       setActive(null);
                       setMobile(false);
+                      if (l.href === "#hire") {
+                        e.preventDefault();
+                        onHire();
+                      }
                     }}
                   >
                     {l.label}
@@ -114,8 +120,8 @@ export function NavigationBar({ onStore }: { onStore: () => void }) {
           </div>
         ))}
       </nav>
-      <button className="store-button" onClick={onStore}>
-        <ShoppingBag size={16} /> STORE
+      <button className="store-button" onClick={onHire}>
+        <Mail size={16} /> HIRE ME
       </button>
       <button
         className="mobile-toggle"
@@ -137,10 +143,10 @@ export function CharacterTransformation({ power }: { power: number }) {
       role="img"
       aria-label={
         power === 0
-          ? "Businessman looking at his raised hand"
+          ? "Bijay as a creator looking at his raised hand"
           : power === 100
-            ? "Fully transformed black and red Spider-Man"
-            : "Businessman transforming into Spider-Man"
+            ? "Fully powered neighborhood creator in hero mode"
+            : "Bijay transforming into hero mode"
       }
     >
       <div className="character-aura" />
@@ -169,94 +175,81 @@ export function CharacterTransformation({ power }: { power: number }) {
     </div>
   );
 }
-export function GameReviews() {
+export function PortfolioStats() {
   return (
-    <section className="reviews" aria-label="Game reviews">
-      <h2>GAME REVIEWS</h2>
+    <section className="reviews" aria-label="Portfolio highlights">
+      <h2>SPEC SHEET</h2>
       {[
-        { name: "IGN", rating: "9.9", quote: "“Potential Game of the Year”" },
-        {
-          name: "GamesRadar",
-          rating: "9.7",
-          quote: "“PlayStation’s Masterpiece”",
-        },
+        { name: "Projects", rating: "12+", quote: "Shipped & in progress" },
+        { name: "Clients", rating: "5+", quote: "Happy collaborations" },
+        { name: "Support", rating: "24", quote: "Hours when it counts" },
       ].map((r) => (
         <div className="review" key={r.name}>
           <div className="rating">
             {r.rating}
-            <span>/ 10</span>
+            {r.rating === "24" && <span>h</span>}
           </div>
           <div>
-            <h3>
-              {r.name}
-              {r.name === "GamesRadar" && (
-                <span className="review-plus">+</span>
-              )}
-            </h3>
+            <h3>{r.name}</h3>
             <p>{r.quote}</p>
           </div>
         </div>
       ))}
       <span className="concept-ratings">
-        Illustrative ratings · Fan concept
+        From Lakeside, Pokhara · Freelancer available
       </span>
     </section>
   );
 }
-export function TrailerPreview({ onPlay }: { onPlay: () => void }) {
+export function ChannelPreview({ onPlay }: { onPlay: () => void }) {
   return (
     <section className="trailer-preview" id="trailer">
-      <h2>WATCH TRAILER</h2>
-      <button onClick={onPlay} aria-label="Play launch trailer">
+      <h2>WATCH CHANNEL</h2>
+      <button onClick={onPlay} aria-label="Open BIZAY TERMINATOR on YouTube">
         <img
-          src="/images/spiderman/trailer.webp"
-          alt="Spider-Man Miles Morales launch trailer"
+          src="/images/portrait.jpg"
+          alt="BIZAY TERMINATOR — gaming and digital content"
           loading="lazy"
         />
         <span className="play-circle">
           <Play fill="currentColor" size={19} />
         </span>
         <span className="trailer-caption">
-          A NEW HERO RISES <span>02:08</span>
+          BIZAY TERMINATOR <span>LIVE</span>
         </span>
       </button>
     </section>
   );
 }
 export function SocialLinks() {
+  const icons: Record<string, React.ReactNode> = {
+    Facebook: <Facebook size={17} />,
+    Instagram: <Instagram size={18} />,
+    YouTube: <Youtube size={18} />,
+    "X / Twitter": (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l8.2-9.4L.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L6.3 3.9H4.5L17.8 20Z" />
+      </svg>
+    ),
+  };
   return (
     <div className="social-links">
-      <a
-        href="https://www.facebook.com/Marvel"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Marvel on Facebook"
-      >
-        <Facebook size={17} />
-      </a>
-      <a
-        href="https://www.instagram.com/marvel/"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Marvel on Instagram"
-      >
-        <Instagram size={18} />
-      </a>
-      <a
-        href="https://x.com/Marvel"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Marvel on X"
-      >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l8.2-9.4L.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L6.3 3.9H4.5L17.8 20Z" />
-        </svg>
-      </a>
+      {socials.map((s) => (
+        <a
+          key={s.label}
+          href={s.url}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={s.label}
+        >
+          {icons[s.label] ?? s.label[0]}
+        </a>
+      ))}
       <span className="social-line" />
     </div>
   );
 }
-export function TrailerModal({
+export function ActionModal({
   kind,
   onClose,
 }: {
@@ -309,7 +302,9 @@ export function TrailerModal({
         className={`sp-modal ${kind === "store" ? "store-modal" : ""}`}
         role="dialog"
         aria-modal="true"
-        aria-label={kind === "trailer" ? "Launch trailer" : "Explore the game"}
+        aria-label={
+          kind === "trailer" ? "YouTube channel" : "Contact Bijay Timilsina"
+        }
         tabIndex={-1}
         ref={ref}
         onClick={(e) => e.stopPropagation()}
@@ -325,41 +320,37 @@ export function TrailerModal({
         </button>
         {kind === "trailer" ? (
           <>
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/U-1cn1yOKYc?autoplay=1&rel=0"
-              title="Marvel’s Spider-Man: Miles Morales official launch trailer"
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen
-            />
+            <SpiderMark />
+            <span className="eyebrow">BEYOND THE SCREEN</span>
+            <h2>BIZAY TERMINATOR</h2>
             <p>
-              Official Miles Morales trailer ·{" "}
-              <a
-                href="https://www.youtube.com/watch?v=U-1cn1yOKYc"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Watch on YouTube
-              </a>
+              Gaming, storytelling, and digital media — connect with a global
+              audience through the channel.
             </p>
+            <a
+              className="primary-button"
+              href={socials[0].url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              OPEN YOUTUBE <ArrowUpRight size={18} />
+            </a>
           </>
         ) : (
           <>
             <SpiderMark />
-            <span className="eyebrow">BE GREATER. BE YOURSELF.</span>
-            <h2>Your next adventure.</h2>
+            <span className="eyebrow">LET&apos;S BUILD THE NEXT ONE</span>
+            <h2>Hire Bijay Timilsina.</h2>
             <p>
-              Bahlil Morales is an independent fan concept, not a purchasable
-              game. Discover the official Marvel’s Spider-Man: Miles Morales
-              experience on PlayStation.
+              UI/UX designer & web developer from Pokhara. Available for
+              freelance — websites, Android apps, and digital content.
             </p>
-            <a
-              className="primary-button"
-              href="https://www.playstation.com/en-us/games/marvels-spider-man-miles-morales/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              EXPLORE THE OFFICIAL GAME <ArrowUpRight size={18} />
+            <a className="primary-button" href={`mailto:${profile.email}`}>
+              EMAIL ME <ArrowUpRight size={18} />
             </a>
+            <p>
+              {profile.phone} · {profile.location}
+            </p>
           </>
         )}
       </motion.div>
@@ -369,12 +360,12 @@ export function TrailerModal({
 export function HeroSection({
   power,
   setPower,
-  onStore,
+  onHire,
   onPlay,
 }: {
   power: number;
   setPower: React.Dispatch<React.SetStateAction<number>>;
-  onStore: () => void;
+  onHire: () => void;
   onPlay: () => void;
 }) {
   const [muted, setMuted] = useState(true);
@@ -385,13 +376,12 @@ export function HeroSection({
   powerRef.current = power;
   const reduced = useReducedMotion();
 
-  // Auto infinite animation without requiring scroll
   useEffect(() => {
     if (reduced) return;
 
     let lastTime = performance.now();
-    let direction = 1; // 1 = transforming towards hero (100), -1 = towards human (0)
-    let pauseUntil = performance.now() + 1800; // start with dramatic pause at human
+    let direction = 1;
+    let pauseUntil = performance.now() + 1800;
 
     const tick = (now: number) => {
       const delta = Math.min(0.1, (now - lastTime) / 1000);
@@ -399,7 +389,6 @@ export function HeroSection({
 
       if (isAutoRef.current) {
         if (now >= pauseUntil) {
-          // Smooth 3 second morph between human and hero
           const step = 33.3 * delta * direction;
           const current = powerRef.current;
           let next = current + step;
@@ -407,11 +396,11 @@ export function HeroSection({
           if (direction === 1 && next >= 100) {
             next = 100;
             direction = -1;
-            pauseUntil = now + 2400; // hold at fully transformed hero
+            pauseUntil = now + 2400;
           } else if (direction === -1 && next <= 0) {
             next = 0;
             direction = 1;
-            pauseUntil = now + 2400; // hold at human
+            pauseUntil = now + 2400;
           }
 
           setPower(next);
@@ -449,7 +438,6 @@ export function HeroSection({
       if (t < 1) {
         animation.current = requestAnimationFrame(manualTick);
       } else {
-        // Resume auto infinite loop after 3.5 seconds
         idleTimer.current = setTimeout(() => {
           isAutoRef.current = true;
         }, 3500);
@@ -495,23 +483,24 @@ export function HeroSection({
         transition={{ duration: 1, delay: 0.2 }}
       >
         <div className="hero-kicker">
-          <span /> A NEW HERO. A NEW STORY.
+          <span /> DESIGNER · DEVELOPER · CREATOR
         </div>
-        <div className="marvel-mark">MARVEL</div>
-        <h1>SPIDER-MAN</h1>
-        <p className="hero-subtitle">BAHLIL MORALES</p>
+        <div className="marvel-mark">POKHARA</div>
+        <h1>BIJAY</h1>
+        <p className="hero-subtitle">TIMILSINA</p>
         <p className="hero-description">
-          Experience the rise of Bahlil Morales as the new hero masters
-          incredible, explosive new powers to become his own Spider-Man.
+          Crafting exceptional digital experiences through clean code and
+          thoughtful design. Computer engineering student, freelancer, gamer,
+          and Android developer — from Lakeside, Pokhara to the wider web.
         </p>
-        <button className="primary-button" onClick={onStore}>
-          PRE-ORDER NOW <ArrowRight size={19} />
+        <button className="primary-button" onClick={onHire}>
+          LET&apos;S BUILD <ArrowRight size={19} />
         </button>
         <div className="platforms">
-          <span className="ps-mark">PS5</span>
+          <span className="ps-mark">BT</span>
           <span className="platform-divider" />
-          <span>PS4</span>
-          <span className="platform-note">PLAY HAS NO LIMITS™</span>
+          <span>UI / UX</span>
+          <span className="platform-note">PRESS POWER TO BOOT</span>
         </div>
       </motion.div>
       <motion.aside
@@ -520,8 +509,8 @@ export function HeroSection({
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.6 }}
       >
-        <GameReviews />
-        <TrailerPreview onPlay={onPlay} />
+        <PortfolioStats />
+        <ChannelPreview onPlay={onPlay} />
       </motion.aside>
       <div className="transform-controls" id="controls">
         <button onClick={transform} className="transform-button">
@@ -538,7 +527,7 @@ export function HeroSection({
           onChange={(e) => handleSliderChange(Number(e.target.value))}
         />
         <div className="transform-labels">
-          <span className={power <= 35 ? "active" : ""}>HUMAN</span>
+          <span className={power <= 35 ? "active" : ""}>CREATOR</span>
           <span className={power >= 65 ? "active" : ""}>HERO</span>
         </div>
       </div>
@@ -574,12 +563,12 @@ export default function SpiderExperience() {
         {intro && <IntroAnimation onComplete={finish} />}
       </AnimatePresence>
       <div inert={intro}>
-        <NavigationBar onStore={() => setModal("store")} />
+        <NavigationBar onHire={() => setModal("store")} />
         <main id="main">
           <HeroSection
             power={power}
             setPower={setPower}
-            onStore={() => setModal("store")}
+            onHire={() => setModal("store")}
             onPlay={() => setModal("trailer")}
           />
           <section className="story-section" id="story">
@@ -590,15 +579,17 @@ export default function SpiderExperience() {
             >
               <span className="eyebrow">BEHIND THE MASK</span>
               <h2>
-                Anyone can wear the mask.
+                UI/UX designer &amp; web developer.
                 <br />
-                <em>It’s how you wear it that matters.</em>
+                <em>Anyone can ship code. It&apos;s how you craft it.</em>
               </h2>
               <div className="story-bottom">
                 <p>
-                  One city. A new responsibility. Discover the extraordinary
-                  power beneath an ordinary life — and become the hero you were
-                  meant to be.
+                  I&apos;m Bijay Timilsina, pursuing a Bachelor&apos;s in
+                  Computer Engineering. As a freelancer, gamer, YouTuber, and
+                  Android developer, I harness technology to build impactful
+                  applications and connect with a global audience through
+                  gaming and digital media.
                 </p>
                 <button
                   onClick={() => {
@@ -614,22 +605,99 @@ export default function SpiderExperience() {
             </motion.div>
             <SpiderMark />
           </section>
+          <section className="story-section" id="skills">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <span className="eyebrow">CORES · STACK</span>
+              <h2>
+                Skills that power the suit.
+                <br />
+                <em>React · Django · Android · WordPress</em>
+              </h2>
+              <div className="story-bottom">
+                <p>
+                  Proficient in Python, JavaScript, and Java, with experience in
+                  React.js and Django. Skilled in Git, SQL databases, and Agile
+                  methodologies — plus {skills.flatMap((g) => g.items).join(", ")}.
+                </p>
+                <a href="#contact">
+                  START A PROJECT <ArrowUpRight size={20} />
+                </a>
+              </div>
+            </motion.div>
+            <SpiderMark />
+          </section>
+          <section className="story-section" id="services">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <span className="eyebrow">ARCHITECTURE</span>
+              <h2>
+                What I build.
+                <br />
+                <em>Web · Mobile · Design · Content</em>
+              </h2>
+              <div className="story-bottom">
+                <p>
+                  {services.map((s) => s.title).join(" · ")}. Responsive
+                  websites, Android apps, clear interfaces, and digital content
+                  from Pokhara — remote OK.
+                </p>
+                <button onClick={() => setModal("store")}>
+                  HIRE ME <ArrowUpRight size={20} />
+                </button>
+              </div>
+            </motion.div>
+            <SpiderMark />
+          </section>
+          <section className="story-section" id="contact">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <span className="eyebrow">END OF FILE · J6</span>
+              <h2>
+                Thanks for probing the board.
+                <br />
+                <em>Let&apos;s build the next one together.</em>
+              </h2>
+              <div className="story-bottom">
+                <p>
+                  {profile.location} · {profile.phone}
+                  <br />
+                  <a href={`mailto:${profile.email}`}>{profile.email}</a>
+                  <br />
+                  Birthday 23 Nov · BE in Computer · Freelance available
+                </p>
+                <a href={`mailto:${profile.email}`}>
+                  SEND A MESSAGE <ArrowUpRight size={20} />
+                </a>
+              </div>
+            </motion.div>
+            <SpiderMark />
+          </section>
         </main>
         <footer className="sp-footer" id="credits">
           <span>
-            MARVEL <b>SPIDER-MAN</b>
+            BIJAY <b>TIMILSINA</b>
           </span>
           <p>
-            Independent fan concept. Not affiliated with Marvel, Sony or
-            Insomniac Games.
+            Developer, designer &amp; digital creator · {profile.location}
             <br />
-            Bahlil Morales and the displayed reviews are illustrative.
+            © {new Date().getFullYear()} ·{" "}
+            <a href={profile.url}>{profile.url.replace("https://", "")}</a>
           </p>
           <a href="#main">BACK TO TOP ↑</a>
         </footer>
       </div>
       <AnimatePresence>
-        {modal && <TrailerModal kind={modal} onClose={close} />}
+        {modal && <ActionModal kind={modal} onClose={close} />}
       </AnimatePresence>
     </div>
   );

@@ -579,7 +579,9 @@ button {
   font-size: 8px;
   letter-spacing: 2px;
   color: #d5b0b8;
-  transition: color 0.2s, opacity 0.2s;
+  transition:
+    color 0.2s,
+    opacity 0.2s;
 }
 .scroll-cue:hover {
   color: #ffffff;
